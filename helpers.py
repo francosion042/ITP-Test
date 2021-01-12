@@ -10,7 +10,6 @@ def validate_email(email):
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     
     if(re.search(regex,email)):  
-        print("Valid Email")
         return True
           
     else:  
@@ -24,7 +23,6 @@ def validate_phone(phone):
   
 
     if(re.search(regex,phone)):  
-        print("Valid Phone")
         return True
           
     else:  

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from operator import itemgetter
 from helpers import validate_email, validate_phone
 
 contacts = []
@@ -27,45 +28,75 @@ class LeadsList:
         return "<__main__.LeadsList: name = " + str(self.name) + "; email = " + str(self.email) + "; phone = " + str(self.phone) + ">"
 
 
+
+        
+# The Function to accept the registration form's json data.       
+def webinar(registrant):
+    data = json.loads(registrant)
+    
+    name, email, phone = itemgetter('name', 'email', 'phone')(data['registrant'])
+    
+    #loop through the contacts to match email and phone
+    for contact in contacts:
+        
+        if email != 'None' and email == contact.email:
+            
+            if contact.phone ==  'None' and phone != 'None': contact.phone = phone
+            return
+        
+        elif phone != 'None' and phone == contact.phone:
+            
+            if contact.email == 'None' and email != 'None': contact.email = email
+            return
+        
+    #loop through the leads to match email and phone    
+    for lead in leads:
+        
+        if email != 'None' and email == lead.email:
+            
+            
+            contacts.append(ContactsList(name, email, phone))
+            leads.remove(lead)
+            return
+        
+        elif phone != 'None' and phone == lead.phone:
+            
+            contacts.append(ContactsList(name, email, phone))
+            leads.remove(lead)
+            return
+        
+        
+    if email != 'None' and not validate_email(email):
+        return    
+    elif phone != 'None' and not validate_phone(phone):
+        return
+    else:
+        contacts.append(ContactsList(name, email, phone))
+            
+    
+    
+
+
 contacts.append(ContactsList('Alice Brown', 'None', '1231112223'))
 contacts.append(ContactsList('Bob Crown', 'bob@crowns.com ', 'None'))
 contacts.append(ContactsList('Carlos Drew', 'carl@drewess.com','3453334445'))
 contacts.append(ContactsList('Doug Emerty', 'None','4564445556'))
 contacts.append(ContactsList('Egan Fair', ' eg@fairness.com', '5675556667'))
 
-leads.append(LeadsList('None',' kevin@keith.com', 'None'))
-leads.append(LeadsList('Lucy', ' lucy@liu.com', '3210001112'))
+
+leads.append(LeadsList('None','kevin@keith.com', 'None'))
+leads.append(LeadsList('Lucy', 'lucy@liu.com', '3210001112'))
 leads.append(LeadsList('Mary Middle ', 'mary@middle.com', '3331112223'))
 leads.append(LeadsList('None', 'None', '4442223334'))
 leads.append(LeadsList('None', 'ole@olson.com', 'None'))
 
-
-
-
-# print('Contacts', contacts[0].name)
-# print('Leads', leads[0].name)
-
-
-
-        
-        
-def webinar(registrant):
-    data = json.loads(registrant)
     
-    for contact in contacts:
-        if data['email'] != contact.email:
-            pass
-            
-        print(contact.name)
-    
-    print(data['registrant'])
-    
-    
+
     
 registrant1 = { 
     "registrant": { 
         "name": "Lucy Liu", 
-        "email": "lucy@liu.com ",
+        "email": "lucy@liu.com",
         "phone": "None", },
     }    
 
@@ -83,8 +114,15 @@ registrant3 = {
         "phone": "None", },
     }
 
+#Register Someone
+webinar(json.dumps(registrant2))
 
-webinar(json.dumps(registrant1))
+
+for contact in contacts:
+    print('CONTACTS: ', contact.name, contact.email, contact.phone)
+    
+for lead in leads:
+    print('LEADS: ',lead.name)
 
 
         
