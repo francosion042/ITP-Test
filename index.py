@@ -39,21 +39,27 @@ def webinar(registrant):
     #loop through the contacts to match email and phone
     for contact in contacts:
         
+        #check if the registrant is already inthe contact List
         if email != 'None' and email == contact.email:
             
+            #check if the phone field in the contact is empty but is privided in the registration form, then update if it is
             if contact.phone ==  'None' and phone != 'None': contact.phone = phone
             return
         
         elif phone != 'None' and phone == contact.phone:
             
+             #check if the email field in the contact is empty but is privided in the registration form, then update if it is
             if contact.email == 'None' and email != 'None': contact.email = email
             return
         
     #loop through the leads to match email and phone    
     for lead in leads:
         
+         #check if the registrant is already in the Leads List
         if email != 'None' and email == lead.email:
             
+             #check if the phone field in the lead is not empty but is empty in the registration form, then update if it is
+            if lead.phone !=  'None' and phone == 'None': phone = lead.phone
             
             contacts.append(ContactsList(name, email, phone))
             leads.remove(lead)
@@ -61,6 +67,8 @@ def webinar(registrant):
         
         elif phone != 'None' and phone == lead.phone:
             
+             #check if the email field in the lead is not empty but is empty in the registration form, then update if it is
+            if lead.email !=  'None' and phone == 'None': email = lead.email
             contacts.append(ContactsList(name, email, phone))
             leads.remove(lead)
             return
@@ -115,7 +123,7 @@ registrant3 = {
     }
 
 #Register Someone
-webinar(json.dumps(registrant2))
+webinar(json.dumps(registrant1))
 
 
 for contact in contacts:
